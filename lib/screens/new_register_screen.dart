@@ -1,18 +1,18 @@
+import 'package:crud_bloc/cubit/new_pet_validation_cubit.dart';
 import 'package:crud_bloc/cubit/pet_cubit.dart';
-import 'package:crud_bloc/cubit/pet_validation_cubit.dart';
 import 'package:crud_bloc/data/models/pet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PetFormPage extends StatelessWidget {
+class NewRegisterScreen extends StatelessWidget {
   final Pet? pet;
-  const PetFormPage({Key? key, this.pet}) : super(key: key);
+  const NewRegisterScreen({Key? key, this.pet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
       BlocProvider.value(value: BlocProvider.of<PetCubit>(context)),
-      BlocProvider(create: (context) => PetValidationCubit()),
+      BlocProvider(create: (context) => NewPetValidationCubit()),
     ], child: PetFormView(pet: pet));
   }
 }
@@ -122,47 +122,36 @@ class _PetFormViewState extends State<PetFormView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    BlocBuilder<PetValidationCubit, PetValidationState>(
+                    BlocBuilder<NewPetValidationCubit, NewPetValidationState>(
                         builder: (context, state) {
                       return TextFormField(
                         decoration: InputDecoration(
                             labelText: 'Nome',
                             border: const OutlineInputBorder(),
                             errorText: state is PetValidating
-                                ? state.validationMessages!['nameMessage'] == ''
+                                ? state.validationMessages['nameMessage'] == ''
                                     ? null
-                                    : state.validationMessages!['nameMessage']
+                                    : state.validationMessages['nameMessage']
                                 : null),
                         controller: _nameController,
                         focusNode: _nameFocusNode,
                         textInputAction: TextInputAction.next,
                         onEditingComplete: _ageFocusNode.requestFocus,
                         onChanged: (name) {
-                          context.read<PetValidationCubit>().validateForm(
-                              _nameController.text,
-                              _ageController.text,
-                              _breedController.text);
+                          context.read<NewPetValidationCubit>().validateForm(
+                              Pet(
+                                  name: _nameController.text,
+                                  age: _ageController.text,
+                                  breed: _breedController.text));
                         },
                         onFieldSubmitted: (String value) {},
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        /*validator: (value) {
-                          if (state is PetValidating) {
-                            if (state.validationMessages!['nameMessage'] ==
-                                '') {
-                              return null;
-                            } else {
-                              return state.validationMessages!['nameMessage'];
-                            }
-                          } else {
-                            return null;
-                          }
-                        },*/
                       );
                     }),
                     const SizedBox(
                       height: 16,
                     ),
-                    BlocBuilder<PetValidationCubit, PetValidationState>(
+                    BlocBuilder<NewPetValidationCubit, NewPetValidationState>(
                         builder: (context, state) {
                       return TextFormField(
                         decoration: const InputDecoration(
@@ -175,19 +164,20 @@ class _PetFormViewState extends State<PetFormView> {
                         textInputAction: TextInputAction.next,
                         onEditingComplete: _breedFocusNode.requestFocus,
                         onChanged: (name) {
-                          context.read<PetValidationCubit>().validateForm(
-                              _nameController.text,
-                              _ageController.text,
-                              _breedController.text);
+                          context.read<NewPetValidationCubit>().validateForm(
+                              Pet(
+                                  name: _nameController.text,
+                                  age: _ageController.text,
+                                  breed: _breedController.text));
                         },
                         onFieldSubmitted: (String value) {},
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           if (state is PetValidating) {
-                            if (state.validationMessages!['ageMessage'] == '') {
+                            if (state.validationMessages['ageMessage'] == '') {
                               return null;
                             } else {
-                              return state.validationMessages!['ageMessage'];
+                              return state.validationMessages['ageMessage'];
                             }
                           } else {
                             return null;
@@ -198,7 +188,7 @@ class _PetFormViewState extends State<PetFormView> {
                     const SizedBox(
                       height: 16,
                     ),
-                    BlocBuilder<PetValidationCubit, PetValidationState>(
+                    BlocBuilder<NewPetValidationCubit, NewPetValidationState>(
                         builder: (context, state) {
                       return TextFormField(
                         decoration: const InputDecoration(
@@ -209,10 +199,11 @@ class _PetFormViewState extends State<PetFormView> {
                         focusNode: _breedFocusNode,
                         textInputAction: TextInputAction.done,
                         onChanged: (name) {
-                          context.read<PetValidationCubit>().validateForm(
-                              _nameController.text,
-                              _ageController.text,
-                              _breedController.text);
+                          context.read<NewPetValidationCubit>().validateForm(
+                              Pet(
+                                  name: _nameController.text,
+                                  age: _ageController.text,
+                                  breed: _breedController.text));
                         },
                         onFieldSubmitted: (String value) {
                           if (_formKey.currentState!.validate()) {
@@ -228,11 +219,11 @@ class _PetFormViewState extends State<PetFormView> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           if (state is PetValidating) {
-                            if (state.validationMessages!['breedMessage'] ==
+                            if (state.validationMessages['breedMessage'] ==
                                 '') {
                               return null;
                             } else {
-                              return state.validationMessages!['breedMessage'];
+                              return state.validationMessages['breedMessage'];
                             }
                           } else {
                             return null;
@@ -245,9 +236,8 @@ class _PetFormViewState extends State<PetFormView> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      child:
-                          BlocBuilder<PetValidationCubit, PetValidationState>(
-                              builder: (context, state) {
+                      child: BlocBuilder<NewPetValidationCubit,
+                          NewPetValidationState>(builder: (context, state) {
                         return ElevatedButton(
                             onPressed: state is PetValidated
                                 ? () {

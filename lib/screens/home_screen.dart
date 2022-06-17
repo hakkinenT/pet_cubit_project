@@ -1,4 +1,5 @@
 import 'package:crud_bloc/cubit/pet_cubit.dart';
+import 'package:crud_bloc/screens/new_register_screen.dart';
 import 'package:crud_bloc/screens/register_screen.dart';
 
 import 'package:flutter/material.dart';
@@ -63,7 +64,7 @@ class PetsView extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => const PetFormPage(pet: null)));
+                  builder: (context) => const NewRegisterScreen(pet: null)));
         },
         child: const Icon(Icons.add),
       ),
@@ -125,7 +126,8 @@ class _PetList extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PetFormPage(pet: pet)));
+                                builder: (context) =>
+                                    NewRegisterScreen(pet: pet)));
                       },
                       icon: const Icon(Icons.edit)),
                   IconButton(
