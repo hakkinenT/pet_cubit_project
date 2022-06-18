@@ -80,6 +80,8 @@ class _PetFormViewState extends State<PetFormView> {
                                 child: const Text('Sim'))
                           ],
                         ));
+              } else {
+                Navigator.pop(context);
               }
             },
             icon: const Icon(Icons.close)),
@@ -125,15 +127,18 @@ class _PetFormViewState extends State<PetFormView> {
                     BlocBuilder<NewPetValidationCubit, NewPetValidationState>(
                         builder: (context, state) {
                       return TextFormField(
-                        decoration: InputDecoration(
-                            labelText: 'Nome',
-                            border: const OutlineInputBorder(),
-                            errorText: state is PetValidating
-                                ? state.validationMessages['nameMessage'] == ''
-                                    ? null
-                                    : state.validationMessages['nameMessage']
-                                : null),
+                        decoration: const InputDecoration(
+                          labelText: 'Nome',
+                          border: OutlineInputBorder(),
+                        ),
                         controller: _nameController,
+                        validator: (value) {
+                          if (state is PetValidating) {
+                            return state.name?.onError;
+                          } else {
+                            return null;
+                          }
+                        },
                         focusNode: _nameFocusNode,
                         textInputAction: TextInputAction.next,
                         onEditingComplete: _ageFocusNode.requestFocus,
@@ -159,11 +164,18 @@ class _PetFormViewState extends State<PetFormView> {
                           border: OutlineInputBorder(),
                         ),
                         controller: _ageController,
+                        validator: (value) {
+                          if (state is PetValidating) {
+                            return state.age?.onError;
+                          } else {
+                            return null;
+                          }
+                        },
                         focusNode: _ageFocusNode,
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.next,
                         onEditingComplete: _breedFocusNode.requestFocus,
-                        onChanged: (name) {
+                        onChanged: (age) {
                           context.read<NewPetValidationCubit>().validateForm(
                               Pet(
                                   name: _nameController.text,
@@ -172,17 +184,6 @@ class _PetFormViewState extends State<PetFormView> {
                         },
                         onFieldSubmitted: (String value) {},
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (state is PetValidating) {
-                            if (state.validationMessages['ageMessage'] == '') {
-                              return null;
-                            } else {
-                              return state.validationMessages['ageMessage'];
-                            }
-                          } else {
-                            return null;
-                          }
-                        },
                       );
                     }),
                     const SizedBox(
@@ -196,6 +197,13 @@ class _PetFormViewState extends State<PetFormView> {
                           border: OutlineInputBorder(),
                         ),
                         controller: _breedController,
+                        validator: (value) {
+                          if (state is PetValidating) {
+                            return state.breed?.onError;
+                          } else {
+                            return null;
+                          }
+                        },
                         focusNode: _breedFocusNode,
                         textInputAction: TextInputAction.done,
                         onChanged: (name) {
@@ -217,18 +225,6 @@ class _PetFormViewState extends State<PetFormView> {
                           }
                         },
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (state is PetValidating) {
-                            if (state.validationMessages['breedMessage'] ==
-                                '') {
-                              return null;
-                            } else {
-                              return state.validationMessages['breedMessage'];
-                            }
-                          } else {
-                            return null;
-                          }
-                        },
                       );
                     }),
                     const SizedBox(

@@ -4,20 +4,25 @@ abstract class NewPetValidationState extends Equatable {
   const NewPetValidationState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class PetValidating extends NewPetValidationState {
-  const PetValidating({required this.validationMessages});
-  final Map<String, dynamic> validationMessages;
+  const PetValidating({this.name, this.age, this.breed});
 
-  PetValidating copyWith({Map<String, dynamic>? validationMessages}) {
+  final Name? name;
+  final Age? age;
+  final Breed? breed;
+
+  PetValidating copyWith({Name? name, Age? age, Breed? breed}) {
     return PetValidating(
-        validationMessages: validationMessages ?? this.validationMessages);
+        name: name ?? this.name,
+        age: age ?? this.age,
+        breed: breed ?? this.breed);
   }
 
   @override
-  List<Object> get props => [validationMessages];
+  List<Object?> get props => [name, age, breed];
 }
 
 class PetValidated extends NewPetValidationState {

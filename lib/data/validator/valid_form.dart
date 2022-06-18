@@ -1,20 +1,18 @@
-import 'package:crud_bloc/data/validator/valid_form_field.dart';
+import 'package:crud_bloc/data/validator/valid_form_input.dart';
 
 class ValidForm {
-  final List<ValidFormField> validFormFields;
+  final List<ValidFormInput> validFormInputs;
 
-  ValidForm({required this.validFormFields});
+  ValidForm({required this.validFormInputs});
 
   bool get isValidate {
     bool isValidate = true;
-    int lenght = validFormFields.length;
-    int i = 0;
 
-    while (i < lenght && isValidate == true) {
-      if (validFormFields[i].isInvalid) {
+    for (var input in validFormInputs) {
+      if (input.isInvalid) {
         isValidate = false;
+        return isValidate;
       }
-      i++;
     }
     return isValidate;
   }

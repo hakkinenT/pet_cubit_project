@@ -1,15 +1,25 @@
-import 'package:crud_bloc/data/validator/valid_form_field.dart';
+import 'package:crud_bloc/data/validator/valid_form_input.dart';
+import 'package:crud_bloc/utils/regex.dart';
 
-class Name implements ValidFormField {
+class Name implements ValidFormInput {
   final String name;
-  final String regex;
-  Name({required this.name, required this.regex}) : _regExp = RegExp(regex);
 
-  final RegExp _regExp;
+  Name({required this.name});
+
+  final RegExp _regExp = RegExp(regexInputText);
 
   @override
   bool get isInvalid => _regExp.hasMatch(name) == false;
 
   @override
   bool get isValid => _regExp.hasMatch(name) == true;
+
+  @override
+  String? get onError {
+    if (isInvalid) {
+      return 'Informe um nome';
+    } else {
+      return null;
+    }
+  }
 }
